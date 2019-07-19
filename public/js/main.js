@@ -155,6 +155,9 @@ const Logs = {
                 t.getPerson(data.uuid);
         });
     },
+    beforeDestroy(){
+        console.log("before Destroy");
+    },
     template: `
         <div>
             <a href="/#/">Back</a><br />
@@ -174,16 +177,21 @@ const Home = {
             console.log("Logout!")
             localStorage.removeItem("uid");
             window.location.href = "/#/login";
+        },
+        movePage: function(link){
+            window.location.href = link;
+            window.location.reload();
         }
     },
     mounted(){
+        window.attFlag = undefined;
         checkAuth();
     },
     template: `
         <div>
             <h2>Menu</h2>
-            <a href="/#/person">Person list</a> | 
-            <a href="/#/logs">Attendance</a> |
+            <button style="cursor:pointer;color: blue;background:none;border:none;" v-on:click="movePage('/#/person')">Person</button> | 
+            <button style="cursor:pointer;color: blue;background:none;border:none;" v-on:click="movePage('/#/logs')">Att logs</button> |
             <button style="cursor:pointer;color: blue;background:none;border:none;" v-on:click="logout">Logout</button> |
         </div>
     `
