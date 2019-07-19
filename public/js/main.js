@@ -9,6 +9,12 @@ socket.on('tap', function(data){
 var sAudio = new Audio('/sound/success_sfx.mp3');
 var eAudio = new Audio('/sound/error_sfx.mp3');
 
+function checkAuth(){
+    const uid = localStorage.getItem("uid");
+    if(!uid)
+        window.location.href="/#/login";
+}
+
 function logAtt(id,callback){
     return new Promise((resolve,reject) => {
         window.fetch('/person/'+id+'/logs').then(res => res.json())
@@ -31,7 +37,23 @@ const Login = {
     }, 
     methods: {
         login: function(event){
-            console.log(this.username);
+            let params = { username: this.username, password: this.password };
+            window.fetch('/login',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(params)
+            }).then(res => {
+                if(res.status == 200)
+                    return res.json();
+                throw "Gagal login";
+            })
+            .then(res => {
+                localStorage.setItem("uid",res.uid);
+                window.location.href="/#/";
+            })
+            .catch(e => alert(e))
         }
     },
     template: `<div>
@@ -72,6 +94,7 @@ const Person = {
         }
     },
     mounted(){
+        checkAuth();
         var t = this;
         window.attFlag = "person-data"
         socket.on('tap', function(data){
@@ -81,6 +104,7 @@ const Person = {
     },
     template: `
         <div>
+            <a href="/#/">Back</a><br />
             <label>UUID : <input v-model="uuid"></label><br />
             <label>Name : <input v-model="name"></label><br />
             <button type="button" v-on:click="savePerson">Login</button>
@@ -122,6 +146,7 @@ const Logs = {
         },
     },
     mounted(){
+        checkAuth();
         var t = this;
         window.attFlag = "att_logs";
         this.getLogs();
@@ -132,6 +157,7 @@ const Logs = {
     },
     template: `
         <div>
+            <a href="/#/">Back</a><br />
             <h2>Logs</h2>
             <ul>
             <li v-for="log in logs">
@@ -142,8 +168,29 @@ const Logs = {
     `
 }
 
+const Home = {
+    methods:{
+        logout: function(){
+            console.log("Logout!")
+            localStorage.removeItem("uid");
+            window.location.href = "/#/login";
+        }
+    },
+    mounted(){
+        checkAuth();
+    },
+    template: `
+        <div>
+            <h2>Menu</h2>
+            <a href="/#/person">Person list</a> | 
+            <a href="/#/logs">Attendance</a> |
+            <button style="cursor:pointer;color: blue;background:none;border:none;" v-on:click="logout">Logout</button> |
+        </div>
+    `
+}
+
 const routes = [
-  { path: '/', component: Login },
+  { path: '/', component: Home },
   { path: '/login', component: Login },
   { path: '/person', component: Person },
   { path: '/logs', component: Logs },

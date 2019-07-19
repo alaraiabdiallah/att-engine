@@ -73,6 +73,17 @@ app.get('/att_logs',async (req,res)=>{
   }
 })
 
+app.post('/login', async (req,res) => {
+  try{
+    const { username,password } = req.body;
+    const user = await db.from('user').where({ username, password }).select("*").first();
+    const uid = user.id
+    res.json({uid});
+  }catch(error){
+    res.json({error});
+  }
+})
+
 io.on('connection',(client) => {
 
   console.log("Connected with id: "+client.id);
