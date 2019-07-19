@@ -64,10 +64,40 @@ app.post('/person',async (req,res)=>{
   }
 })
 
+app.put('/person',async (req,res)=>{
+  try {
+    const { body } = req;
+    const person = await db.from('person').where('uuid',body.id).first();
+    await db('person').where('id',body.id).update(body);
+    res.json({success: true})
+  } catch (error) {
+    res.json({success: false, error})
+  }
+})
+
+app.delete('/person/:id',async (req,res)=>{
+  try {
+    const { id } = req.params;
+    await db.from('person').where('id',id).del();
+    res.json({success: true})
+  } catch (error) {
+    res.json({success: false, error})
+  }
+})
+
 app.get('/att_logs',async (req,res)=>{
   try{
     const logs = await db.from('att_logs').innerJoin('person','person.id','att_logs.person_id').select('person.name','att_logs.log_time');
     res.json(logs);
+  }catch(error){
+    res.json({error});
+  }
+})
+
+app.get('/people',async (req,res)=>{
+  try{
+    const ppl = await db.from('person').select('*');
+    res.json(ppl);
   }catch(error){
     res.json({error});
   }

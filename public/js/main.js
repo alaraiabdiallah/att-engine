@@ -65,12 +65,41 @@ const Login = {
 const Person = {
     data: function(){
         return{
+            isEdit:false,
+            people: [],
             uuid: '',
             name: '',
+            id: 0,
         }
     }, 
     methods: {
-        savePerson: function(){
+        getPeople: function(){
+            window.fetch('/people').then(res => {
+                if(res.status == 200)
+                    return res.json();
+                throw "Gagal Mengambil Data";
+            }).then((res) => this.people = res)
+            .catch(e => alert(e))
+        },
+
+        getPerson: function(id){
+            this.isEdit = true;
+            window.fetch('/person/'+id)
+            .then(res => {
+                if(res.status == 200) 
+                    return res.json();
+                throw "Error";
+            })
+            .then((data) => {
+                this.uuid = data.uuid;
+                this.name = data.name;
+                this.id = data.id;
+            })
+            .catch(e => {
+                console.error(e);
+            })
+        },
+        insertPerson: function(){
             let params = { uuid: this.uuid, name: this.name };
             window.fetch('/person',{
                 method: 'POST',
@@ -86,6 +115,47 @@ const Person = {
             .then(res => {
                 if(res.success)
                     alert('Berhasil save data')
+                this.getPeople()
+            })
+            .catch(e => alert(e))
+        },
+
+        updatePerson: function(){
+            let params = { uuid: this.uuid, name: this.name, id:this.id };
+            window.fetch('/person',{
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(params)
+            }).then(res => {
+                if(res.status == 200)
+                    return res.json();
+                throw "Gagal save data";
+            })
+            .then(res => {
+                if(res.success)
+                    alert('Berhasil save data')
+                this.uuid = "";
+                this.name = "";
+                this.id = "";
+                this.isEdit = false;
+                this.getPeople()
+            })
+            .catch(e => alert(e))
+        },
+        deletePerson: function(id){
+            window.fetch('/person/'+id,{
+                method: 'DELETE',
+            }).then(res => {
+                if(res.status == 200)
+                    return res.json();
+                throw "Gagal delete data";
+            })
+            .then(res => {
+                if(res.success)
+                    alert('Berhasil Delete data')
+                this.getPeople()
             })
             .catch(e => alert(e))
         },
@@ -96,6 +166,7 @@ const Person = {
     mounted(){
         checkAuth();
         var t = this;
+        t.getPeople();
         window.attFlag = "person-data"
         socket.on('tap', function(data){
             if(window.attFlag == "person-data")
@@ -105,9 +176,28 @@ const Person = {
     template: `
         <div>
             <a href="/#/">Back</a><br />
-            <label>UUID : <input v-model="uuid"></label><br />
+            <table border="1" v-if="people.length > 0">
+                <tr>
+                    <td>No</td>
+                    <td>UUID</td>
+                    <td>Name</td>
+                    <td>action</td>
+                </tr>
+                <tr v-for="(item, index) in people">
+                    <td>{{ index + 1 }}</td>
+                    <td>{{ item.uuid }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>
+                        <button type="button" v-on:click="getPerson(item.uuid)">Update</button>
+                        <button type="button" v-on:click="deletePerson(item.id)">Delete</button>
+                    </td>
+                </tr>
+            </table>
+            <input type="hidden" v-model="id">
+            <label>UUID : <input v-model="uuid" :readonly="isEdit"></label><br />
             <label>Name : <input v-model="name"></label><br />
-            <button type="button" v-on:click="savePerson">Login</button>
+            <button type="button" v-on:click="insertPerson" v-if="!isEdit">Add</button>
+            <button type="button" v-on:click="updatePerson" v-if="isEdit">Update</button>
         </div>
     `
 }
