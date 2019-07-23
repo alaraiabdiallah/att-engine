@@ -64,7 +64,7 @@ var Logs = new Vue({
             })
             .then((data) => {
                 return logAtt(id,(res) => {
-                    this.sendFB({uuid: id,person_name: data.name, machine_name, log_at: new DateTime().toISOString()});
+                    this.sendFB({uuid: id,person_name: data.name, machine_name, log_at: new Date().toGMTString()});
                     sAudio.play();
                     this.getLogs();
                     // sendToFireStore({uuid: id,person_name: data.name, machine_name, log_at: new Date().toISOString});
