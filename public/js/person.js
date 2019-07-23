@@ -50,8 +50,6 @@ const Person = new Vue({
                 throw "Gagal save data";
             })
             .then(res => {
-                if(res.success)
-                    alert('Berhasil save data')
                 this.getPeople()
             })
             .catch(e => alert(e))

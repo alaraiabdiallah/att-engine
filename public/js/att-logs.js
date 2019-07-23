@@ -1,3 +1,5 @@
+var sAudio = new Audio('/sound/success_sfx.mp3');
+var eAudio = new Audio('/sound/error_sfx.mp3');
 var Logs = new Vue({
     el: "#logs",
     data: function(){
