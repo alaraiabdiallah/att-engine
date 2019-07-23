@@ -54,8 +54,8 @@ app.get('/person/:uuid/logs',async (req,res)=>{
       res.status(400);
       throw "Person not registered on machine";
     }
-    await db('att_logs').insert({ person_id: person.id , log_time: db.fn.now() });
-    res.json({success: true, log_time: db.fn.now()});
+    let data = await db('att_logs').insert({ person_id: person.id , log_time: db.fn.now() });
+    res.json({success: true, data});
   }catch(error){
     res.json({error});
   }
