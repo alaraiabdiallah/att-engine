@@ -101,7 +101,7 @@ var Logs = new Vue({
         window.attFlag = "att_logs";
         this.getLogs();
         socket.on('tap', function(data){
-            t.getPerson(data.uuid, data.machine_name);
+            t.getPerson(data.uuid, data.machine);
         });
     },
     beforeDestroy(){
