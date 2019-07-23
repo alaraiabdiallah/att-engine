@@ -55,7 +55,7 @@ var Logs = new Vue({
             .then((data) => {
                 return logAtt(id,(res) => {
                     sAudio.play();
-                    sendToFireStore({uuid: id,person_name: data.name, machine_name, log_at:res.log_time});
+                    sendToFireStore({uuid: id,person_name: data.name, machine_name, log_at: new Date().toISOString});
                     this.getLogs();
                 });
             })
