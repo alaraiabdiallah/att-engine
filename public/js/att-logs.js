@@ -1,5 +1,18 @@
 var sAudio = new Audio('/sound/success_sfx.mp3');
 var eAudio = new Audio('/sound/error_sfx.mp3');
+
+function logAtt(id,callback){
+    return new Promise((resolve,reject) => {
+        window.fetch('/person/'+id+'/logs').then(res => res.json())
+        .then(res =>{
+            if(res.success == true)
+                return resolve(res);
+            else
+                return reject("something wrong");
+        })
+        .then(callback).catch(() => reject("Something wrong"));
+    })
+}
 var Logs = new Vue({
     el: "#logs",
     data: function(){
