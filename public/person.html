@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Attendance Engine</title>
+    <link rel="stylesheet" href="css/spectre.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <header class="navbar">
+            <section class="navbar-section">
+                <a href="/l" class="btn btn-link">Attendance Logs</a>
+                <a href="/p" class="btn btn-link">People</a>
+                <a href="#" onclick="logout()" class="btn btn-link">Logout</a>
+            </section>
+        </header>
+        <div id="person">
+
+            <div>
+                <table class="table" v-if="people.length > 0">
+                    <tr>
+                        <td>No</td>
+                        <td>UUID</td>
+                        <td>Name</td>
+                        <td>action</td>
+                    </tr>
+                    <tr v-for="(item, index) in people">
+                        <td>{{ index + 1 }}</td>
+                        <td>{{ item.uuid }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>
+                            <button type="button" class="btn btn-primary" v-on:click="getPerson(item.uuid)">Update</button>
+                            <button type="button" class="btn btn-primary" v-on:click="deletePerson(item.id)">Delete</button>
+                        </td>
+                    </tr>
+                </table>
+                <input type="hidden" v-model="id">
+                <div class="form-group">
+                    <label class="form-label" for="uuid">UUID</label>
+                    <input class="form-input" style="width: 200px;" type="text" id="uuid" v-model="uuid" readonly placeholder="UUID">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="name">Person Name</label>
+                    <input class="form-input" style="width: 200px;" type="text" id="name" v-model="name" placeholder="Person Name">
+                </div>
+                <button type="button" class="btn btn-primary" v-on:click="insertPerson" v-if="!isEdit">Add</button>
+                <button type="button" class="btn btn-primary" v-on:click="updatePerson" v-if="isEdit">Update</button>
+            </div>
+        </div>
+    </div>
+    
+    
+
+
+    <script src="js/socket.io.js"></script>
+    <script src="js/socket-init.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/person.js"></script>
+</body>
+</html>

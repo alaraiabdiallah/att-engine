@@ -1,0 +1,2 @@
+const Home = new Vue({
+});

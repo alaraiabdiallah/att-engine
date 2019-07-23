@@ -12,7 +12,7 @@ var eAudio = new Audio('/sound/error_sfx.mp3');
 function checkAuth(){
     const uid = localStorage.getItem("uid");
     if(!uid)
-        window.location.href="/#/login";
+        window.location.href="/lgn";
 }
 
 function logAtt(id,callback){

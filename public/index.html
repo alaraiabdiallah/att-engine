@@ -5,16 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Attendance Engine</title>
+    <link rel="stylesheet" href="css/spectre.min.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-    <div id="app">
-        <router-view></router-view>
-    </div>
+    <header class="navbar">
+        <section class="navbar-section">
+            <a href="/l" class="btn btn-link">Attendance Logs</a>
+            <a href="/p" class="btn btn-link">People</a>
+            <a href="#" onclick="logout()" class="btn btn-link">Logout</a>
+        </section>
+    </header>
 
-    <script src="js/socket.io.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
-    <script src="https://unpkg.com/vue-router@3.0.7/dist/vue-router.min.js"></script>
-    <script src="js/main.js"></script>
+    <h1>Selamat Datang</h1>
+
+    <script src="js/auth.js"></script>
+    <script>
+        checkAuth();
+    </script>
 </body>
 </html>

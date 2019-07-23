@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Attendance Engine</title>
+    <link rel="stylesheet" href="css/spectre.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <div id="login">
+        <div class="columns">
+            <div class="column col-3" style="margin: 50px auto;">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title h5">Login</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="form-label" for="username">Username</label>
+                            <input class="form-input" type="text" id="uuid" v-model="username" placeholder="Username">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="password">Password</label>
+                            <input class="form-input" type="password" id="uuid" v-model="password" placeholder="Password">
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" class="btn btn-primary" v-on:click="login">Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <script src="js/vue.js"></script>
+    <script src="https://unpkg.com/vue-router@3.0.7/dist/vue-router.min.js"></script>
+    <script src="js/login.js"></script>
+</body>
+</html>

@@ -4,6 +4,7 @@ var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var rc522 = require("rc522");
 var db = require('./db');
+var path = require("path");
 var bodyParser =  require('body-parser');
 app.use(express.static('public'));
 app.use(bodyParser.json());
@@ -19,6 +20,17 @@ server.listen(PORT, function (err) {
 
 app.get('/',(req, res) => {
     res.sendFile(path.join(__dirname+'/public/index.html'));
+});
+
+app.get('/p',(req, res) => {
+  res.sendFile(path.join(__dirname+'/public/person.html'));
+});
+
+app.get('/l',(req, res) => {
+  res.sendFile(path.join(__dirname+'/public/att-logs.html'));
+});
+app.get('/lgn',(req, res) => {
+  res.sendFile(path.join(__dirname+'/public/login.html'));
 });
 
 app.get('/person/:uuid',async (req,res)=>{
