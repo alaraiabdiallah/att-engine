@@ -1,6 +1,30 @@
 var sAudio = new Audio('/sound/success_sfx.mp3');
 var eAudio = new Audio('/sound/error_sfx.mp3');
 
+var firebaseConfig = {
+    apiKey: "AIzaSyBenrkqd1qQKsKi3ROZ_7MeQ2UPBl8XvRM",
+    authDomain: "experimental-fb30c.firebaseapp.com",
+    databaseURL: "https://experimental-fb30c.firebaseio.com",
+    projectId: "experimental-fb30c",
+    storageBucket: "experimental-fb30c.appspot.com",
+    messagingSenderId: "465644974117",
+    appId: "1:465644974117:web:1284076871a26ecd"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+var db = firebase.firestore();
+
+function sendToFireStore({uuid, person_name,machine_name,log_at}){
+    db.collection("att_logs").add({uuid, person_name,machine_name,log_at})
+    .then(function(docRef) {
+        console.log("Document written with ID: ", docRef.id);
+    })
+    .catch(function(error) {
+        console.error("Error adding document: ", error);
+    });
+}
+
 function logAtt(id,callback){
     return new Promise((resolve,reject) => {
         window.fetch('/person/'+id+'/logs').then(res => res.json())
@@ -21,7 +45,7 @@ var Logs = new Vue({
         }
     }, 
     methods: {
-        getPerson: function(id){
+        getPerson: function(id,machine_name){
             window.fetch('/person/'+id)
             .then(res => {
                 if(res.status == 200) 
@@ -31,6 +55,7 @@ var Logs = new Vue({
             .then((data) => {
                 return logAtt(id,(res) => {
                     sAudio.play();
+                    sendToFireStore({uuid: id,person_name: data.name, machine_name, log_at:res.log_time});
                     this.getLogs();
                 });
             })
@@ -53,8 +78,7 @@ var Logs = new Vue({
         window.attFlag = "att_logs";
         this.getLogs();
         socket.on('tap', function(data){
-            if(window.attFlag == "att_logs")
-                t.getPerson(data.uuid);
+            t.getPerson(data.uuid, data.machine_name);
         });
     },
     beforeDestroy(){

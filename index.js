@@ -55,7 +55,7 @@ app.get('/person/:uuid/logs',async (req,res)=>{
       throw "Person not registered on machine";
     }
     await db('att_logs').insert({ person_id: person.id , log_time: db.fn.now() });
-    res.json({success: true});
+    res.json({success: true, log_time: db.fn.now()});
   }catch(error){
     res.json({error});
   }
@@ -148,7 +148,7 @@ io.on('connection',(client) => {
 rc522(function(rfidSerialNumber){
   console.log(rfidSerialNumber);  
   io.emit('tap', {
-        machine: 1,
+        machine: "machine1",
         uuid: rfidSerialNumber
     })
 });
