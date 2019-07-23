@@ -16,7 +16,6 @@ firebase.initializeApp(firebaseConfig);
 var db = firebase.firestore();
 
 db.collection("people").onSnapshot((querySnapshot) => {
-    t.people = [];
     querySnapshot.forEach((doc) => {
         console.log(`${doc.id} => ${doc.data()}`);
     });
