@@ -16,13 +16,17 @@ firebase.initializeApp(firebaseConfig);
 var db = firebase.firestore();
 
 function sendToFireStore({uuid, person_name,machine_name,log_at}){
-    db.collection("att_logs").add({uuid, person_name,machine_name,log_at})
-    .then(function(docRef) {
-        console.log("Document written with ID: ", docRef.id);
-    })
-    .catch(function(error) {
-        console.error("Error adding document: ", error);
-    });
+    return new Promise((resolve,reject) => {
+        db.collection("att_logs").add({uuid, person_name,machine_name,log_at})
+        .then(function(docRef) {
+            console.log("Document written with ID: ", docRef.id);
+            return resolve("Document written with ID: ", docRef.id);
+        })
+        .catch(function(error) {
+            console.error("Error adding document: ", error)
+            return reject("Error adding document: ", error);
+        });
+    });    
 }
 
 function logAtt(id,callback){
@@ -55,14 +59,27 @@ var Logs = new Vue({
             .then((data) => {
                 return logAtt(id,(res) => {
                     sAudio.play();
-                    sendToFireStore({uuid: id,person_name: data.name, machine_name, log_at: new Date().toISOString});
                     this.getLogs();
+                    this.sendFB({uuid: id,person_name: data.name, machine_name, log_at: new Date().toISOString});
+                    // sendToFireStore({uuid: id,person_name: data.name, machine_name, log_at: new Date().toISOString});
                 });
             })
             .catch(e => {
                 eAudio.play();
                 console.error(e);
             })
+        },
+
+        sendFB: function({uuid, person_name,machine_name,log_at}){
+            db.collection("att_logs").add({uuid, person_name,machine_name,log_at})
+            .then(function(docRef) {
+                console.log("Document written with ID: ", docRef.id);
+                // return resolve("Document written with ID: ", docRef.id);
+            })
+            .catch(function(error) {
+                console.error("Error adding document: ", error)
+                // return reject("Error adding document: ", error);
+            }); 
         },
 
         getLogs: function(){
