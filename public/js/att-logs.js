@@ -15,6 +15,13 @@ firebase.initializeApp(firebaseConfig);
 
 var db = firebase.firestore();
 
+db.collection("people").onSnapshot((querySnapshot) => {
+    t.people = [];
+    querySnapshot.forEach((doc) => {
+        console.log(`${doc.id} => ${doc.data()}`);
+    });
+});
+
 function sendToFireStore({uuid, person_name,machine_name,log_at}){
     return new Promise((resolve,reject) => {
         db.collection("att_logs").add({uuid, person_name,machine_name,log_at})
