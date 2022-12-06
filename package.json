@@ -14,9 +14,9 @@
   "author": "Ala Rai AbdiAllah",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.19.0",
+    "body-parser": "^1.20.1",
     "dotenv": "^8.0.0",
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "knex": "^0.18.3",
     "mysql2": "^1.6.5",
     "rc522": "^0.2.0",
